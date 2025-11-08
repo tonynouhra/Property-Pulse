@@ -42,3 +42,5 @@ App Router: Built-in layout.js that automatically wraps child routes
 
 Pages Router: Uses getServerSideProps, getStaticProps
 App Router: Uses async components and fetch directly
+
+npm -i mongodb mongoos
