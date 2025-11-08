@@ -7,12 +7,12 @@ const override = {
     borderColor: "red",
 }
 
-const LoadingPage = ({loading}) => {
+const LoadingPage = () => {
     return (
         <ClipLoader
             color={"#2563EB"}
             size={150}
-            Loading={loading}
+            loading={true}
             cssOverride={override}
             aria-label="Loading Spinner"
             data-testid="loader"

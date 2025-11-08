@@ -1,9 +1,9 @@
 import Link from "next/link";
 // import properties from "@/properties.json";
 import PropertyCard from "@/components/PropertyCard";
-import fetchProperties from "@/utils/fetchProperties";
+import { fetchAllProperties } from "@/utils/requests";
 
-// async function fetchProperties() {
+// async function requests() {
 //     try {
 //         const res = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/properties`, {
 //             method: 'GET',
@@ -28,7 +28,7 @@ import fetchProperties from "@/utils/fetchProperties";
 // }
 
 const PropertiesPage = async () => {
-    const properties = await fetchProperties();
+    const properties = await fetchAllProperties();
     properties.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));// Sort by createdAt descending
     return (
         <section className="px-4 py-6">
