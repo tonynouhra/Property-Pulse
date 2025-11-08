@@ -3,16 +3,17 @@ import connectDB from "@/config/database";
 import Property from "@/models/Property";
 
 
-//Get /api.properties
+//Get /api/properties
 export const GET = async (request) => {
     try {
         await connectDB();
         const properties = await Property.find({});
-        console.log('Fetched properties:', properties);
+        // console.log('Fetched properties:', properties);
 
         return NextResponse.json({
-            message: 'Properties fetched successfully',
-            data: properties
+            // message: 'Properties fetched successfully',
+            // data: properties
+            properties
         }, {status: 200});
 
 
