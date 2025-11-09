@@ -37,14 +37,12 @@ const PropertiesPage = async () => {
                     {properties.length === 0 ? (
                         <p>No properties available.</p>) : (
 
-                        properties.map((property) => (
-                            // <div key={property.id} className="border rounded-lg overflow-hidden shadow-md">
-                            //     {property.name}
-                            //
-                            // </div>
-                            <PropertyCard key={property._id} property={property}/>
-
-
+                        properties.map((property, index) => (
+                            <PropertyCard
+                                key={property._id}
+                                property={property}
+                                priority={index < 3}
+                            />
                         ))
 
                     )}

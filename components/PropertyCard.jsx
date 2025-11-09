@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {FaBed, FaBath, FaRulerCombined, FaMoneyBill, FaMapMarker } from "react-icons/fa";
 
-const PropertyCard = ({property}) => {
+const PropertyCard = ({property, priority = false}) => {
 
     // Function to get the appropriate rate display
     const getRateDisplay = () => {
@@ -30,6 +30,7 @@ const PropertyCard = ({property}) => {
                 width={400}
                 height={300}
                 className="object-cover rounded-t-xl"
+                priority={priority}
             />
             <div className="p-4">
                 <div className="text-left md:text-center lg:text-left mb-6">

@@ -74,10 +74,6 @@ const PropertyPage = () => {
             }
         };
 
-        if (property === null) {
-            fetchPropertyData(); // call the fetch function
-        }
-
         fetchPropertyData(); // call the fetch function
     }, [id]); // dependency array - refetch if id changes
 
@@ -87,7 +83,9 @@ const PropertyPage = () => {
 
     return (
         <>
-            {!loading && property && (<>
+            {loading && <LoadingPage/>}
+            {!loading && property && (
+                <>
                     <PropertyHeaderImage image={property.images[0]}/>
                     <section>
                         <div className="container m-auto py-6 px-6">
@@ -198,7 +196,6 @@ const PropertyPage = () => {
                     </section>
                 </>
             )}
-
         </>
     );
 };
@@ -208,15 +205,15 @@ export default PropertyPage;
 /**
  *
  * 1. Component mounts → Renders with initial state (loading: true)
- *    ↓
+ * ↓
  * 2. Browser displays: "Loading..."
- *    ↓
+ * ↓
  * 3. useEffect runs → Fetches data
- *    ↓
+ * ↓
  * 4. Data arrives → setState called
- *    ↓
+ * ↓
  * 5. Component re-renders → Shows actual data
- *    ↓
+ * ↓
  * 6. Browser updates: Shows property name
  * ## Important Points:
  * - ✅ **Everything happens CLIENT SIDE** (because of ) `'use client'`
@@ -233,18 +230,18 @@ export default PropertyPage;
  *
  *
  * 1. useEffect runs
- *    ↓
+ * ↓
  * 2. fetchProperty(id) is called
- *    ↓
+ * ↓
  * 3. Wait... (API request happening)
- *    ↓
+ * ↓
  * 4. ✅ Data arrives!
- *    ↓
+ * ↓
  * 5. setProperty(property) ← useState UPDATES // store the data abd notify React
- *    ↓
+ * ↓
  * 6. React detects state change
- *    ↓
+ * ↓
  * 7. Component RE-RENDERS with new data
- *    ↓
+ * ↓
  * 8. Browser shows the property name
  */
