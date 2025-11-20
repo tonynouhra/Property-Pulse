@@ -11,6 +11,7 @@ import {signIn, signOut, useSession, getProviders} from 'next-auth/react';
 
 const Navbar = () => {
     const {data: session} = useSession(); // equivalent to const session = useSession().data
+    const profileImage = session?.user?.image || profileDefault;
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
     const [providers, setProviders] = useState(true);
@@ -24,9 +25,11 @@ const Navbar = () => {
         }
         setAuthProviders();
     }, []);
-    console.log("Navbar Pathname:", pathname);
-    console.log("Session Data:", session);
-    console.log("Auth Providers:", providers);
+    // console.log("Navbar Pathname:", pathname);
+    // console.log("Session Data:", session);
+    // console.log("Auth Providers:", providers);
+    // console.log("session:", session);
+    // console.log("profileImage:", profileImage);
 
     return (
 
@@ -163,7 +166,9 @@ const Navbar = () => {
                                         <span className="sr-only">Open user menu</span>
                                         <Image
                                             className="h-8 w-8 rounded-full"
-                                            src={profileDefault}
+                                            src={profileImage || profileDefault}
+                                            width={32}
+                                            height={32}
                                             alt=""
                                         />
                                     </button>
@@ -176,6 +181,7 @@ const Navbar = () => {
                                         aria-orientation="vertical"
                                         aria-labelledby="user-menu-button"
                                         tabIndex="-1"
+
                                     >
                                         <Link
                                             href="/profile"
@@ -183,6 +189,7 @@ const Navbar = () => {
                                             role="menuitem"
                                             tabIndex="-1"
                                             id="user-menu-item-0"
+                                            onClick={() => setIsProfileMenuOpen(false)}
                                         >Your Profile</Link
                                         >
                                         <Link
@@ -191,9 +198,14 @@ const Navbar = () => {
                                             role="menuitem"
                                             tabIndex="-1"
                                             id="user-menu-item-2"
+                                            onClick={() => setIsProfileMenuOpen(false)}
                                         >Saved Properties</Link
                                         >
                                         <button
+                                            onClick={() => {
+                                                // setIsProfileMenuOpen(false);
+                                                signOut();
+                                            }}
                                             href="#"
                                             className="block px-4 py-2 text-sm text-gray-700"
                                             role="menuitem"
