@@ -2,6 +2,7 @@ import {NextResponse} from 'next/server';
 import connectDB from "@/config/database";
 import Property from "@/models/Property";
 import {getSessionUser} from "@/utils/getSessionUser";
+import imagekit from "@/config/Imagekit";
 
 //Get /api/properties
 export const GET = async (request) => {
@@ -63,10 +64,28 @@ export const POST = async (request) => {
 
         const formData = await request.formData();
 
+        // Get image files from form
         const imageFiles = formData.getAll('images').filter((image) => image.name !== '');
-        // TODO: Implement image upload to cloud storage (Cloudinary, AWS S3, etc.)
-        // For now, we'll use empty array since schema expects string URLs
-        const images = [];
+
+        // Upload images to ImageKit
+        const imageUrls = [];
+
+        for (const imageFile of imageFiles) {
+            // Convert File to buffer
+            const bytes = await imageFile.arrayBuffer();
+            const buffer = Buffer.from(bytes);
+
+            // Upload to ImageKit
+            const uploadResponse = await imagekit.upload({
+                file: buffer,
+                fileName: imageFile.name,
+                folder: '/propertypulse'
+            });
+
+            imageUrls.push(uploadResponse.url);
+        }
+
+        console.log('Uploaded images:', imageUrls);
 
         // Parse FormData into a proper object structure
         const propertyData = {
@@ -94,7 +113,7 @@ export const POST = async (request) => {
                 phone: formData.get('seller_info.phone')
             },
             owner: userId,
-            images
+            images: imageUrls
         };
 
         console.log('Creating property with data:', propertyData);

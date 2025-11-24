@@ -124,3 +124,7 @@ AuthProvider (in layout.jsx)
 **All three work together** to create a secure application! The `AuthProvider` provides the session, and then you explicitly verify it wherever you need protection.
 
 You nailed it! 👏
+
+
+https://imagekit.io/
+npm install imagekit

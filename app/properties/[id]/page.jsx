@@ -50,7 +50,8 @@ import LoadingPage from "@/app/loading"; // import fetchProperty from utils
 import PropertyHeaderImage from "@/components/PropertyHeaderImage";
 import Link from "next/link";
 import PropertyDetails from "@/components/PropertyDetails";
-import {FaArrowLeft} from 'react-icons/fa'; // import icons
+import {FaArrowLeft} from 'react-icons/fa';
+import PropertyImages from "@/components/PropertyImages"; // import icons
 
 
 const PropertyPage = () => {
@@ -194,6 +195,7 @@ const PropertyPage = () => {
                             </div>
                         </div>
                     </section>
+                    <PropertyImages images={property.images} />
                 </>
             )}
         </>
