@@ -1,5 +1,6 @@
 'use client';
 import {useState, useEffect} from "react";
+import {useRouter} from "next/navigation";
 
 const AMENITIES = [
     'Wifi',
@@ -63,6 +64,7 @@ const SELLER_INFO_FIELDS = [
 ];
 
 const PropertyAddForm = () => {
+    const router = useRouter();
     const [mounted, setMounted] = useState(false);
     // to test form state
     const [fields, setFields] = useState({
@@ -142,26 +144,82 @@ const PropertyAddForm = () => {
 
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
-        console.log('Selected files:', files);
-        //cloning current images array
-        const updatedImages = [...fields.images];
-        //add new files to the array
-        for (const file of files) {
-            updatedImages.push(file);
-        }
-        //update state
+        // Update state with new files (replacing old ones)
         setFields((prevFields) => ({
-                ...prevFields,
-                images: updatedImages,
+            ...prevFields,
+            images: files
+        }));
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const formData = new FormData();
+
+            // Add all fields to FormData
+            formData.append('type', fields.type);
+            formData.append('name', fields.name);
+            formData.append('description', fields.description);
+
+            // Add location fields
+            formData.append('location.street', fields.location.street);
+            formData.append('location.city', fields.location.city);
+            formData.append('location.state', fields.location.state);
+            formData.append('location.zipcode', fields.location.zipcode);
+
+            // Add property details
+            formData.append('beds', fields.beds);
+            formData.append('baths', fields.baths);
+            formData.append('square_feet', fields.square_feet);
+
+            // Add amenities
+            fields.amenities.forEach((amenity) => {
+                formData.append('amenities', amenity);
+            });
+
+            // Add rates
+            formData.append('rates.weekly', fields.rates.weekly);
+            formData.append('rates.monthly', fields.rates.monthly);
+            formData.append('rates.nightly', fields.rates.nightly);
+
+            // Add seller info
+            formData.append('seller_info.name', fields.seller_info.name);
+            formData.append('seller_info.email', fields.seller_info.email);
+            formData.append('seller_info.phone', fields.seller_info.phone);
+
+            // Add images
+            console.log('fields.images before sending:', fields.images);
+            console.log('Number of images:', fields.images.length);
+            fields.images.forEach((image, index) => {
+                console.log(`Image ${index}:`, image.name, image.type, image.size);
+                formData.append('images', image);
+            });
+
+            const response = await fetch('/api/properties', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Property created:', data);
+                // Redirect to the new property page
+                router.push(`/properties/${data.property._id}`);
+            } else {
+                const error = await response.json();
+                console.error('Error:', error);
+                alert('Failed to create property');
             }
-        ));
-
-
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            alert('An error occurred while creating the property');
+        }
     }
 
 
     return (mounted && (
-            <form>
+            <form onSubmit={handleSubmit}>
                 <h2 className="text-3xl text-center font-semibold mb-6">
                     Add Property
                 </h2>
@@ -365,6 +423,7 @@ const PropertyAddForm = () => {
                         accept="image/*"
                         multiple
                         onChange={handleImageChange}
+                        required
                     />
                 </div>
 
