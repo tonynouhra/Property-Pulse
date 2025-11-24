@@ -21,54 +21,75 @@ const AMENITIES = [
 
 // Rate types - add or remove rate types here
 const RATE_TYPES = [
-    { label: 'Weekly', key: 'weekly' },
-    { label: 'Monthly', key: 'monthly' },
-    { label: 'Nightly', key: 'nightly' }
+    {label: 'Weekly', key: 'weekly'},
+    {label: 'Monthly', key: 'monthly'},
+    {label: 'Nightly', key: 'nightly'}
 ];
 
 // Location fields - add or remove location fields here
 const LOCATION_FIELDS = [
-    { id: 'street', name: 'location.street', placeholder: 'Street', required: false },
-    { id: 'city', name: 'location.city', placeholder: 'City', required: true },
-    { id: 'state', name: 'location.state', placeholder: 'State', required: true },
-    { id: 'zipcode', name: 'location.zipcode', placeholder: 'Zipcode', required: false }
+    {id: 'street', name: 'location.street', placeholder: 'Street', required: false},
+    {id: 'city', name: 'location.city', placeholder: 'City', required: true},
+    {id: 'state', name: 'location.state', placeholder: 'State', required: true},
+    {id: 'zipcode', name: 'location.zipcode', placeholder: 'Zipcode', required: false}
 ];
 
 // Seller info fields - add or remove seller info fields here
 const SELLER_INFO_FIELDS = [
-    { id: 'seller_name', label: 'Seller Name', name: 'seller_info.name', type: 'text', placeholder: 'Name', required: false },
-    { id: 'seller_email', label: 'Seller Email', name: 'seller_info.email', type: 'email', placeholder: 'Email address', required: true },
-    { id: 'seller_phone', label: 'Seller Phone', name: 'seller_info.phone', type: 'tel', placeholder: 'Phone', required: false }
+    {
+        id: 'seller_name',
+        label: 'Seller Name',
+        name: 'seller_info.name',
+        type: 'text',
+        placeholder: 'Name',
+        required: false
+    },
+    {
+        id: 'seller_email',
+        label: 'Seller Email',
+        name: 'seller_info.email',
+        type: 'email',
+        placeholder: 'Email address',
+        required: true
+    },
+    {
+        id: 'seller_phone',
+        label: 'Seller Phone',
+        name: 'seller_info.phone',
+        type: 'tel',
+        placeholder: 'Phone',
+        required: false
+    }
 ];
 
 const PropertyAddForm = () => {
     const [mounted, setMounted] = useState(false);
     // to test form state
-    const[fields,setFields]=useState({
+    const [fields, setFields] = useState({
         type: 'Appartment',
-        name:'Test Property',
-        description:'This is a test property description.',
-        location:{
-            street:'123 Main St',
-            city:'Test City',
-            state:'TS',
-            zipcode:'12345'
+        name: 'Test Property',
+        description: 'This is a test property description.',
+        location: {
+            street: '123 Main St',
+            city: 'Test City',
+            state: 'TS',
+            zipcode: '12345'
         },
-        beds:'2',
-        baths:'1',
-        square_feet:'850',
-        amenities:['Wifi','Full Kitchen','Washer & Dryer','Coffee Maker'],
-        rates:{
-            weekly:'500',
-            monthly:'1500',
-            nightly:'80'
+        beds: '2',
+        baths: '1',
+        square_feet: '850',
+        amenities: ['Wifi', 'Full Kitchen', 'Washer & Dryer', 'Coffee Maker'],
+        rates: {
+            weekly: '500',
+            monthly: '1500',
+            nightly: '80'
         },
-        seller_info:{
-            name:'John Doe',
-            email:'',
-            phone:'123-456-7890'
+        seller_info: {
+            name: 'John Doe',
+            email: '',
+            phone: '123-456-7890'
         },
-        images:[],
+        images: [],
 
     });
 
@@ -76,9 +97,67 @@ const PropertyAddForm = () => {
         setMounted(true);
     }, []);
 
-    const handleChange=(e)=>{}
-    const handleAmenitiesChangeChange=(e)=>{}
-    const handleImageChange=(e)=>{}
+    const handleChange = (e) => {
+        const {name, value} = e.target;
+        // Handle nested fields
+        if (name.includes('.')) {
+            const [outerkey, innerkey] = name.split('.');
+            console.log(outerkey, innerkey);
+            setFields((prevFields) => ({
+                ...prevFields,
+                [outerkey]: {
+                    ...prevFields[outerkey],
+                    [innerkey]: value
+                }
+            }));
+        } else {
+            setFields((prevFields) => ({
+                ...prevFields,
+                [name]: value
+            }));
+        }
+    }
+
+    const handleAmenitiesChangeChange = (e) => {
+        const {value, checked} = e.target;
+        // clone current array
+        let updatedAmenities = [...fields.amenities];
+        if (checked) {
+            // add amenity
+            updatedAmenities.push(value);
+        } else {
+            // remove amenity
+            const index = updatedAmenities.indexOf(value);
+            if (index > -1) {
+                updatedAmenities.splice(index, 1);
+            }
+        }
+        // update state
+        setFields((prevFields) => ({
+            ...prevFields,
+            amenities: updatedAmenities
+        }));
+    }
+
+
+    const handleImageChange = (e) => {
+        const files = Array.from(e.target.files);
+        console.log('Selected files:', files);
+        //cloning current images array
+        const updatedImages = [...fields.images];
+        //add new files to the array
+        for (const file of files) {
+            updatedImages.push(file);
+        }
+        //update state
+        setFields((prevFields) => ({
+                ...prevFields,
+                images: updatedImages,
+            }
+        ));
+
+
+    }
 
 
     return (mounted && (
