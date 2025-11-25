@@ -68,28 +68,28 @@ const PropertyAddForm = () => {
     const [mounted, setMounted] = useState(false);
     // to test form state
     const [fields, setFields] = useState({
-        type: 'Appartment',
-        name: 'Test Property',
-        description: 'This is a test property description.',
+        type: '',
+        name: '',
+        description: '',
         location: {
-            street: '123 Main St',
-            city: 'Test City',
-            state: 'TS',
-            zipcode: '12345'
+            street: '',
+            city: '',
+            state: '',
+            zipcode: ''
         },
-        beds: '2',
-        baths: '1',
-        square_feet: '850',
-        amenities: ['Wifi', 'Full Kitchen', 'Washer & Dryer', 'Coffee Maker'],
+        beds: '',
+        baths: '',
+        square_feet: '',
+        amenities: [],
         rates: {
-            weekly: '500',
-            monthly: '1500',
-            nightly: '80'
+            weekly: '',
+            monthly: '',
+            nightly: ''
         },
         seller_info: {
-            name: 'John Doe',
+            name: '',
             email: '',
-            phone: '123-456-7890'
+            phone: ''
         },
         images: [],
 
