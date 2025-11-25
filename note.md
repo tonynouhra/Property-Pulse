@@ -128,3 +128,6 @@ You nailed it! 👏
 
 https://imagekit.io/
 npm install imagekit
+
+npm install react-toastify
+npm install sweetalert2

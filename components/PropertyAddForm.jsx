@@ -238,6 +238,7 @@ const PropertyAddForm = () => {
                         value={fields.type}
                         onChange={handleChange}
                     >
+                        <option value="">Select Property Type</option>
                         <option value="Apartment">Apartment</option>
                         <option value="Condo">Condo</option>
                         <option value="House">House</option>

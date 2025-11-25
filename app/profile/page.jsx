@@ -5,7 +5,8 @@ import {useSession} from "next-auth/react";
 import profileDefaultImage from '@/assets/images/profile.png';
 import Spinner from "@/components/Spinner";
 import {useEffect, useState} from "react";
-
+import {toast} from "react-toastify";
+import Swal from 'sweetalert2';
 
 const ProfilePage = () => {
     const {data: session} = useSession();
@@ -15,6 +16,43 @@ const ProfilePage = () => {
 
     const [properties, setProperties] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    const handleDeleteProperty = async (propertyId) => {
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        });
+
+        if (!result.isConfirmed) return;
+
+        try {
+            const response = await fetch(`/api/properties/${propertyId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                // Remove the property from state
+                const updatedProperties = properties.filter((property) => property._id !== propertyId);
+                setProperties(updatedProperties);
+                toast.success('Property deleted successfully');
+            } else {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to delete property');
+            }
+        } catch (error) {
+            console.error('Error deleting property:', error);
+            toast.error(`Error: ${error.message}`);
+        }
+    };
 
     useEffect(() => {
         const fetchUserProperties = async (userId) => {
@@ -39,7 +77,7 @@ const ProfilePage = () => {
         }
         // Fetch properties when session is available
         if (session && session.user && session.user.id) {
-            fetchUserProperties(session.user.id);   
+            fetchUserProperties(session.user.id);
         }
 
     }, [session]);
@@ -64,7 +102,8 @@ const ProfilePage = () => {
                                     height={192}
                                 />
                             </div>
-                            <h2 className="text-2xl mb-4"><span className="font-bold block">Name: </span> {userName}</h2>
+                            <h2 className="text-2xl mb-4"><span className="font-bold block">Name: </span> {userName}
+                            </h2>
                             <h2 className="text-2xl"><span className="font-bold block">Email: </span> {userEmail}
                             </h2>
                         </div>
@@ -101,6 +140,7 @@ const ProfilePage = () => {
                                             <button
                                                 className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600"
                                                 type="button"
+                                                onClick={() => handleDeleteProperty(property._id)}
                                             >
                                                 Delete
                                             </button>
@@ -113,8 +153,6 @@ const ProfilePage = () => {
                 </div>
             </div>
         </section>
-
-
     )
 }
 
