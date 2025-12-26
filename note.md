@@ -131,3 +131,4 @@ npm install imagekit
 
 npm install react-toastify
 npm install sweetalert2
+npm i react-map-gl mapbox-gl react-geocode

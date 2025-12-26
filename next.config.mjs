@@ -2,6 +2,7 @@
 const nextConfig = {
   /* config options here */
   reactCompiler: true,
+  transpilePackages: ['react-map-gl', 'mapbox-gl'],
     images:{
       remotePatterns:[
         {
@@ -18,6 +19,11 @@ const nextConfig = {
           {
               protocol: 'https',
               hostname: 'ik.imagekit.io',
+              pathname: '/**',
+          },
+          {
+              protocol: 'https',
+              hostname: 'api.mapbox.com',
               pathname: '/**',
           },
 
